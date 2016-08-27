@@ -1,0 +1,5 @@
+<ConfigVigame>
+    <GameOpenActivity>wb.gc.xmxx.zxb.MainActivity</GameOpenActivity>
+    <ScreenOrientation>portrait</ScreenOrientation>
+    <SupportAdPositions>splash,banner,pause,level_win,level_fail,gift_reward,gift_speed,home_mfzs,pause_mfzs,level_fail_mfzs</SupportAdPositions>
+</ConfigVigame>

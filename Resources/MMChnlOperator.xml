@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<DefaultOperator>
+    <CMCC>
+        <giftSequence>1,2,1,4,0,0,0</giftSequence>
+    </CMCC>
+
+    <UNICOM>
+        <giftSequence>1,2,3,4,0,0,0</giftSequence>
+    </UNICOM>
+
+    <TELECOM>
+        <giftSequence>1,2,3,4,0,0,0</giftSequence>
+    </TELECOM>
+</DefaultOperator>

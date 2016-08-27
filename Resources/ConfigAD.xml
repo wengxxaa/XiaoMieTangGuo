@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <debug>0</debug>
+    <adsources>
+        
+        <adsource agent="Baidu" appid="b03a4631">
+            <placement type="banner" code="2679540"></placement>
+            <placement type="plaque" code="2679542"></placement>
+        </adsource>
+        
+        <adsource agent="Vungle" appid="882710395">
+            <placement type="video" code=""></placement>
+        </adsource>
+    </adsources>
+    <adpositions>
+        <adposition name="banner" type="banner" agent="Baidu" agentpecent="85"
+            rate="100"></adposition>
+        <adposition name="pause" type="plaque" agent="Baidu" agentpecent="40"
+            delaytime="0" rate="100">
+            <extraparam round="1,3,5" />
+        </adposition>
+        <adposition name="level_fail" type="plaque" agent="Baidu" agentpecent="40"
+            delaytime="0" rate="100">
+        </adposition>
+        <adposition name="home_mfzs" type="video" agent="Vungle" agentpecent="100"
+            rate="100"></adposition>
+        <adposition name="shop_mfzs" type="video" agent="Vungle" agentpecent="100"
+            rate="100"></adposition>
+        <adposition name="level_fail_mfzs" type="video" agent="Vungle" agentpecent="100"
+            rate="100"></adposition>
+    </adpositions>
+</root>

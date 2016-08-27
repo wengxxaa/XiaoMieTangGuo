@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+    <Debug>1</Debug>
+    <resultCode>0</resultCode>
+    <resultMsg>成功</resultMsg>
+    <mm>1</mm>
+    <more>0</more>
+    <gift>0</gift>
+    <audit>0</audit>
+    <wxshare>0</wxshare>
+    <headline>http://prize.vigame.cn:8998/AlonePublicServlet?value=cGlkPTk5OTk5Jmxzbj0zJmltc2k9JmNobGlkPTAwMDAwMDAwMDAwMCZhcHBpZD0xMzY2NSZpbWVpPQ==</headline>
+    <bonus>http://prize.vigame.cn:8998/AloneTopServlet?value=cGlkPTk5OTk5Jmxzbj0zJmNobGlkPTAwMDAwMDAwMDAwMA==</bonus>
+    <activity>http://prize.vigame.cn:8998/AloneActivityServlet?value=cGlkPTk5OTk5Jmxzbj0zJmltc2k9JmNobGlkPTAwMDAwMDAwMDAwMCZhcHBpZD0xMzY2NSZpbWVpPQ==</activity>
+    <shf>1</shf>
+    <timestamp>1460784932757</timestamp>
+    <timesegment />
+    <giftDelay>180</giftDelay>
+    <giftSequence>1,2,3,4,5,6,7</giftSequence>
+    <freeBtn>0</freeBtn>
+    <lottery>1</lottery>
+    <wxpay>0</wxpay>
+    <wxred>0</wxred>
+    <ad>1</ad>
+    <adSequence></adSequence>
+    <api>http://a.zjh178.com:5998/a/adb.jsp</api>
+    <apiGet>http://zf.quanzhifu.net:6502/getpyz</apiGet>
+    <apiResp>http://zf.quanzhifu.net:6502/getryz</apiResp>
+    <discountPay>1</discountPay>
+    <qpay>1</qpay>
+</response>

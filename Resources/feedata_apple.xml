@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <!--<appid>14665</appid>
+    <prjid>16250</prjid>-->
+    
+    <appid>14665</appid>
+    <prjid>16108</prjid>
+    <feeinfo>
+        <ID>2</ID>
+        <price>600</price>
+        <code>2</code>
+        <desc>30赠25枚钻石</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>3</ID>
+        <price>1200</price>
+        <code>3</code>
+        <desc>60赠60枚钻石</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>4</ID>
+        <price>1800</price>
+        <code>4</code>
+        <desc>100赠80枚钻石</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>5</ID>
+        <price>3000</price>
+        <code>5</code>
+        <desc>200赠200枚钻石</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>6</ID>
+        <price>3000</price>
+        <code>6</code>
+        <desc>限时大礼包</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>7</ID>
+        <price>3000</price>
+        <code>7</code>
+        <desc>通关大礼包</desc>
+    </feeinfo>
+
+    <feeinfo>
+        <ID>8</ID>
+        <price>3000</price>
+        <code>8</code>
+        <desc>200赠200枚钻石</desc>
+    </feeinfo>
+</data>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <imsi>1</imsi>
+    <imei>2</imei>
+    <lsn>124425558</lsn>
+    <macaddress>4</macaddress>
+    <mobile>5</mobile>
+
+    <appid>13665</appid>
+    <prjid>157310</prjid>
+    <mmid>000000000000</mmid>
+
+    <package>wb.gc.xmxx.zxb</package>
+    <appname>消灭糖果</appname>
+    <version>3.0.9</version>
+
+    <!--运营商：移动1，联通2，电信3-->
+    <PayOperator>3</PayOperator>
+
+    <!--支付类型：MM2，基地3，沃商店4，天翼空间6，爱游戏7，其它参考PayType枚举类-->
+    <PayType>2</PayType>
+
+    <Market>7</Market>
+
+    <feeinfo>
+        <ID>0</ID>
+        <price>10</price>
+        <code>30000884106201</code>
+        <desc>新手礼包——基地</desc>
+    </feeinfo>	
+	
+    <feeinfo>
+        <ID>1</ID>
+        <price>2900</price>
+        <code>30000884106202</code>
+        <desc>400枚钻石</desc>
+    </feeinfo>
+	
+	<feeinfo>
+        <ID>2</ID>
+        <price>600</price>
+        <code>30000884106203</code>
+        <desc>6元60枚钻石</desc>
+    </feeinfo>
+	
+	<feeinfo>
+        <ID>3</ID>
+        <price>1000</price>
+        <code>30000884106204</code>
+        <desc>10元100枚钻石</desc>
+    </feeinfo>	
+	
+	<feeinfo>
+        <ID>4</ID>
+        <price>1500</price>
+        <code>30000884106205</code>
+        <desc>15元200枚钻石</desc>
+    </feeinfo>	
+
+	<feeinfo>
+        <ID>5</ID>
+        <price>2900</price>
+        <code>30000884106206</code>
+        <desc>29元400枚钻石</desc>
+    </feeinfo>	
+
+	<feeinfo>
+        <ID>6</ID>
+        <price>2900</price>
+        <code>30000884106207</code>
+        <desc>限时大礼包</desc>
+    </feeinfo>		
+	
+	<feeinfo>
+        <ID>7</ID>
+        <price>1</price>
+        <code>30000884106208</code>
+        <desc>新手礼包-MM</desc>
+    </feeinfo>	
+	
+	<feeinfo>
+        <ID>8</ID>
+        <price>2900</price>
+        <code>30000884106209</code>
+        <desc>过关大礼包</desc>
+    </feeinfo>	
+</data>
