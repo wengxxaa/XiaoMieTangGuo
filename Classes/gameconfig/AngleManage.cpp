@@ -658,8 +658,12 @@ void AngleManage::startNewRound(int key)
 
 bool AngleManage::onTouchBegan(Touch *touch, Event *unused_event)
 {
-	if(getGameState()!=STATE_RUN||gettouchState()==TOUCH_FALSE||_touchselect>0)
+	if (getGameState() != STATE_RUN || gettouchState() == TOUCH_FALSE || _touchselect > 0)
+	{
+		if (_touchselect > 0)
+			endTouch();
 		return false;
+	}
 
 	_touchselect=0;
 	auto startpos=touch->getLocation(); 
@@ -724,60 +728,65 @@ void AngleManage::onTouchEnded(Touch *touch, Event *unused_event)
 {
 	if(_touchselect<=0||gettouchState()==TOUCH_FALSE)
 		return;
+	endTouch();
+}
+
+void AngleManage::endTouch()
+{
 	removeTipBox();
 	settouchState(TOUCH_FALSE);
-	auto box=(AngleNode *)this->getChildByTag(1000+_touchselect-1);
+	auto box = (AngleNode *)this->getChildByTag(1000 + _touchselect - 1);
 	assert(box);
-	auto fillvec=getFillBlack(box,box->getPosition());
-	if(fillvec.empty())
+	auto fillvec = getFillBlack(box, box->getPosition());
+	if (fillvec.empty())
 	{
-		if(_guide)
+		if (_guide)
 		{
-			auto lay=Director::getInstance()->getRunningScene()->getChildByName("bclayer");
+			auto lay = Director::getInstance()->getRunningScene()->getChildByName("bclayer");
 			lay->setVisible(true);
 		}
 
 		//放置失败
 		cjMusic::playEffect("video/dropwrong-drag.mp3");
 		box->setScale(selectboxsize);
-		box->runAction(Sequence::create(CCMoveTo::create(0.1f,box->getCenterAnPointX(Vec2(nextboxbegin+nextboxoffest*(_touchselect-1),selectboxoffest))),CallFunc::create([this](){
-			_touchselect=0;
+		box->runAction(Sequence::create(CCMoveTo::create(0.1f, box->getCenterAnPointX(Vec2(nextboxbegin + nextboxoffest*(_touchselect - 1), selectboxoffest))), CallFunc::create([this]() {
+			_touchselect = 0;
 			settouchState(TOUCH_TRUE);
-		}),nullptr));
+		}), nullptr));
 		//box->runAction(CCScaleTo::create(0.1f,0.6f));
 	}
 	else
 	{
-		if(_guide)
+		if (_guide)
 		{
-			auto lay=Director::getInstance()->getRunningScene()->getChildByName("bclayer");
+			auto lay = Director::getInstance()->getRunningScene()->getChildByName("bclayer");
 			lay->removeFromParent();
-			_guide=false;
-			GameDataInstance()->_guide=false;
-			GameData::getSaveData()->_angle._guider=true;
+			_guide = false;
+			GameDataInstance()->_guide = false;
+			GameData::getSaveData()->_angle._guider = true;
 			GameData::getInstance()->dataSave();
 
-			auto mu1=(Menu*)getChildByName("prop1");
+			auto mu1 = (Menu*)getChildByName("prop1");
 			mu1->setEnabled(true);
-			auto mu2=(Menu*)getChildByName("prop2");
+			auto mu2 = (Menu*)getChildByName("prop2");
 			mu2->setEnabled(true);
 		}
 
 		//放置成功
 		cjMusic::playEffect("video/drop-drag.mp3");
 		Vector<FiniteTimeAction*> action;
-		action.pushBack(MoveTo::create(0.01f,posToposition(fillvec[0])));
-		action.pushBack(CallFunc::create([this,fillvec,box](){
+		action.pushBack(MoveTo::create(0.01f, posToposition(fillvec[0])));
+		action.pushBack(CallFunc::create([this, fillvec, box]() {
 			box->setVisible(false);
-			_selectExit[_touchselect-1]=false;
+			_selectExit[_touchselect - 1] = false;
 			startNewRound();
-			_touchselect=0;
-			chessFill(box->_id,fillvec);
+			_touchselect = 0;
+			chessFill(box->_id, fillvec);
 		}));
 		action.pushBack(DelayTime::create(chessfilltime));
-		action.pushBack(CallFunc::create([this,box](){
+		action.pushBack(CallFunc::create([this, box]() {
 			box->removeFromParent();
-			float time=chessfilltime;
+			float time = chessfilltime;
 			if (!chessCheck())
 			{
 				runAction(Sequence::create(DelayTime::create(time), CallFunc::create([this]() {
@@ -1417,7 +1426,7 @@ bool AngleManage::levelUp()
 		if(getmLevel()==4)
 			vigame::ad::ADManager::openAd("level_win");
 
-		if(GameData::getSaveData()->_gg_guanshu<=5)
+//		if(GameData::getSaveData()->_gg_guanshu<=5)
 			GameData::getSaveData()->_gg_guanshu++;
 
 		settouchState(TOUCH_FALSE);
@@ -1457,7 +1466,7 @@ void AngleManage::LevelUpMotion()
 	BoxFillJudge();
 
 	int temp=0;
-	if(GameData::getSaveData()->_gg_guanshu>5&&GameData::getSaveData()->_levelreward_num<LEVELREWARD&&getmLevel()!=sdata._level&&getmLevel()>1)
+	if(GameData::getSaveData()->_gg_guanshu>=5&&((GameData::getSaveData()->_gg_guanshu-5)%2==0)&&GameData::getSaveData()->_levelreward_num<LEVELREWARD&&getmLevel()!=sdata._level&&getmLevel()>1)
 	{
 		temp=1;
 		settouchState(TOUCH_FALSE);
@@ -1896,10 +1905,17 @@ void AngleManage::hongbaoReward()
 
 	auto node=CSLoader::createNode("animation/reward.csb");
 	char name[30];
-	if(rewardid<10)
+	if (rewardid < 10)
+	{
 		sprintf(name,"dimond-%d",rewardid);
-	else 
+		PayScene::getInstance()->diamondRain(layer);
+	}
+	else
+	{
 		sprintf(name,"prop");
+		PayScene::getInstance()->yanhua(layer);
+	}
+
 	auto sp=node->getChildByName(name);
 	sp->retain();
 	sp->removeFromParent();
@@ -1923,10 +1939,10 @@ void AngleManage::hongbaoReward()
 	}
 	else
 	{
-		auto diamonds=CCParticleSystemQuad::create("lizi/diamonds.plist");
-		layer->addChild(diamonds,2);
-		diamonds->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*DIAMOND_HIGH));
-		diamonds->setAutoRemoveOnFinish(true);
+		//auto diamonds=CCParticleSystemQuad::create("lizi/diamonds.plist");
+		//layer->addChild(diamonds,2);
+		//diamonds->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*DIAMOND_HIGH));
+		//diamonds->setAutoRemoveOnFinish(true);
 	}
 
 	sp->setScaleX(0.0f);

@@ -567,7 +567,7 @@ void PayScene::dailyClickTip(int number,int key)
 
 void PayScene::addDiamondPlist(Layer *lay,int level)
 {
-    auto diamonds=CCParticleSystemQuad::create("lizi/diamonds.plist");
+    auto diamonds=CCParticleSystemQuad::create("lizi/zuanshiyu.plist");
     lay->addChild(diamonds,level);
     diamonds->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*DIAMOND_HIGH));
     diamonds->setAutoRemoveOnFinish(true);
@@ -806,10 +806,15 @@ void PayScene::turnTable()
 	auto diamondnum = dynamic_cast<ui::TextBMFont*>(csb->getChildByName("diamondnum")->getChildByName("num"));
 	auto tip = csb->getChildByName("tipShow");
 
-	auto cishunum = dynamic_cast<ui::Text*>(csb->getChildByName("tab_back")->getChildByName("turnshow")->getChildByName("num"));
-	cishunum->setString(cjTTFLabel::getNameByInt("%d", (20 - GameData::getSaveData()->_freeroundnum)));
+	auto hand = handNode::createHand(0.4f);
+	colorlay->addChild(hand, 2, "hand");
+	hand->setPosition(Vec2(320,110));
 
-	diamondnum->setString(cjTTFLabel::getNameByInt("%d",MAX(0,GameData::getSaveData()->_diamondNumber)));
+	int kk = GameData::getSaveData()->_freeroundnum;
+	auto cishunum = dynamic_cast<ui::Text*>(csb->getChildByName("tab_back")->getChildByName("turnshow")->getChildByName("num"));
+	cishunum->setString(cjTTFLabel::getNameByInt("%d", MAX(0,(20 - GameData::getSaveData()->_freeroundnum))));
+
+	diamondnum->setString(cjTTFLabel::getNameByInt("%d",GameData::getSaveData()->_diamondNumber));
 	auto menuno= dynamic_cast<ui::Button*>(mfcj->getChildByName("menu_2"));	
 	//menuno->addTouchEventListener([=](Ref *, ui::Widget::TouchEventType type) {
 	//	if(type == ui::Widget::TouchEventType::BEGAN)
@@ -839,6 +844,7 @@ void PayScene::turnTable()
     }
     else{
         lottery->setVisible(false);
+		hand->setVisible(false);
 
 		if (GameData::getSaveData()->_freeroundnum >= 20)
 		{
@@ -858,6 +864,7 @@ void PayScene::turnTable()
 					tip->setVisible(false);
 					menuno->setVisible(false);
 					lottery->setVisible(true);
+					hand->setVisible(true);
 					diamondnum->stopAllActions();
 				}
 			});
@@ -978,6 +985,7 @@ void PayScene::tableReward(int key)
 
 	auto colorlay=dynamic_cast<Layer*>(Director::getInstance()->getRunningScene()->getChildByTag(100));
 	auto csb = colorlay->getChildByName("csb");
+	auto hand = colorlay->getChildByName("hand");
 	GameData::getSaveData()->_freeroundnum++;
 	if (GameData::getSaveData()->_freeroundnum >= 20)
 	{
@@ -988,6 +996,7 @@ void PayScene::tableReward(int key)
 		auto tip2 = tip->getChildByName("tip2");
 		menuno->setVisible(true);
 		lottery->setVisible(false);
+		hand->setVisible(false);
 		tip->setVisible(true);
 		tip1->setVisible(false);
 		tip2->setVisible(true);
@@ -1027,6 +1036,7 @@ void PayScene::tableReward(int key)
 		str = "zs.png";
 		num = rand() % 3+1;
 		GameData::getSaveData()->_diamondNumber += num;
+		diamondRain(secondlayer);
 	}
 	else if (key == 1 || key == 4 || key == 7)
 	{
@@ -1053,16 +1063,19 @@ void PayScene::tableReward(int key)
 	{
 		str = "prop01.png";
 		GameData::getSaveData()->_propnum[0]++;
+		yanhua(secondlayer);
 	}
 	else if (key == 3)
 	{
 		str = "prop03.png";
 		GameData::getSaveData()->_propnum[2]++;
+		yanhua(secondlayer);
 	}
 	else if (key == 5)
 	{
 		str = "prop04.png";
 		GameData::getSaveData()->_propnum[3]++;
+		yanhua(secondlayer);
 	}
 
 #else
@@ -1071,32 +1084,38 @@ void PayScene::tableReward(int key)
 		str="zs.png";
 		num=rand()%10+1;
 		GameData::getSaveData()->_diamondNumber+=num;
+		diamondRain(secondlayer);
 	}
 	else if(key==2||key==6)
 	{
 		str="zs.png";
 		num=rand()%10+10;
 		GameData::getSaveData()->_diamondNumber+=num;
+		diamondRain(secondlayer);
 	}
 	else if(key==1)
 	{
 		str="prop01.png";
 		GameData::getSaveData()->_propnum[0]++;
+		yanhua(secondlayer);
 	}
 	else if(key==3)
 	{
 		str="prop03.png";
 		GameData::getSaveData()->_propnum[2]++;
+		yanhua(secondlayer);
 	}
 	else if(key==5)
 	{
 		str="prop04.png";
 		GameData::getSaveData()->_propnum[3]++;
+		yanhua(secondlayer);
 	}
 	else if(key==7)
 	{
 		str="prop02.png";
 		GameData::getSaveData()->_propnum[1]++;
+		yanhua(secondlayer);
 	}
 #endif
 	GameDataInstance()->dataSave();
@@ -1231,20 +1250,23 @@ void PayScene::turnMotion(float ft)
 
 void PayScene::turnTip()
 {
-	auto colorlay = dynamic_cast<Layer*>(Director::getInstance()->getRunningScene()->getChildByTag(100));
 	auto secondlayer = LayerColor::create(Color4B(0, 0, 0, 255 * 0.7f), WINSIZE.width, WINSIZE.height);
-	colorlay->addChild(secondlayer, 100, 100);
+	Director::getInstance()->getRunningScene()->addChild(secondlayer, 100, 100);
 	secondlayer->setPosition(WINORIGIN);
 
-	secondlayer->runAction(Sequence::create(DelayTime::create(2.0f), CallFunc::create([=]() {
-		secondlayer->removeFromParent();
-	}), nullptr));
+	//secondlayer->runAction(Sequence::create(DelayTime::create(2.0f), CallFunc::create([=]() {
+	//	secondlayer->removeFromParent();
+	//}), nullptr));
 
 	auto tipnode = CSLoader::createNode("animation/diamondtip_get.csb");
 	secondlayer->addChild(tipnode);
 	tipnode->setPosition(WINORIGIN);
 
-	auto Button_mfzs = dynamic_cast<ui::Button*>(tipnode->getChildByName("Button_mfzs"));
+	auto tipaction = CSLoader::createTimeline("animation/diamondtip_get.csb");
+	tipnode->runAction(tipaction);
+	tipaction->play("guangquan", true);
+
+	auto Button_mfzs = dynamic_cast<ui::Button*>(tipnode->getChildByName("Button_mffh"));
 	Button_mfzs->addTouchEventListener([=](Ref *, ui::Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::BEGAN)
 		{
@@ -1257,7 +1279,7 @@ void PayScene::turnTip()
 					GameData::getInstance()->dataSave();
 
 					dailyClickTip(10, 2);
-					addDiamondPlist(colorlay, 10);
+					addDiamondPlist(secondlayer, 10);
 				}
 			});
 		}
@@ -1266,12 +1288,16 @@ void PayScene::turnTip()
 	auto fntnum= dynamic_cast<ui::TextBMFont*>(tipnode->getChildByName("fntnum"));
 	fntnum->setString(cjTTFLabel::getNameByInt("%d",MAX(1,10- GameData::getSaveData()->_freediamondnum)));
 
+	auto hand = handNode::createHand(0.4f);
+	secondlayer->addChild(hand);
+	hand->setPosition(Vec2(340,250));
+
 	auto cancel = dynamic_cast<ui::Button*>(tipnode->getChildByName("cha"));
 	cancel->addTouchEventListener([=](Ref*, ui::Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::BEGAN)
 		{
 			cjMusic::playEffect("video/tap.mp3");
-			colorlay->removeFromParent();
+			secondlayer->removeFromParent();
 		}
 	});
 
@@ -1281,7 +1307,7 @@ void PayScene::turnTip()
 		return true;
 	};
 	touchListener->onTouchEnded = [=](Touch* touch, Event* event) {
-		secondlayer->removeFromParent();
+	//	secondlayer->removeFromParent();
 	};
 	secondlayer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, secondlayer);
 }
@@ -1325,6 +1351,15 @@ void PayScene::diamondRain(Layer *lay)
 	auto rain = ParticleSystemQuad::create("lizi/zuanshiyu.plist");
 	lay->addChild(rain, 100);
 	rain->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*1.0f));
+	rain->setAutoRemoveOnFinish(true);
+}
+
+//ÑÌ»¨
+void PayScene::yanhua(Layer *lay)
+{
+	auto rain = ParticleSystemQuad::create("lizi/yanhua.plist");
+	lay->addChild(rain, 100);
+	rain->setPosition(Vec2(WINSIZE.width / 2.0f, WINSIZE.height/2.0f));
 	rain->setAutoRemoveOnFinish(true);
 }
 

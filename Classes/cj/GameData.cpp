@@ -161,9 +161,9 @@ void GameData::dataRead()
 
 			d_saveData._freeroundday=gamedata->_freeroundday;
 
-			d_saveData._freeroundnum =gamedata->_freeroundday;
+			d_saveData._freeroundnum =gamedata->_freeroundnum;
 
-			d_saveData._freediamondnum = gamedata->_freeroundday;
+			d_saveData._freediamondnum = gamedata->_freediamondnum;
 
 			d_saveData._huhightnum=gamedata->_huhightnum;
 

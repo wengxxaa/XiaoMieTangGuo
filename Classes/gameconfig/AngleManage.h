@@ -141,6 +141,9 @@ private:
 	//流星雨
 	void startRain();
 
+	//点击结束处理
+	void endTouch();
+
 private:
 	bool _chessBlack[CHESS_SIZE_W_ANGLE][CHESS_SIZE_H_ANGLE];
 	int _chessColor[CHESS_SIZE_W_ANGLE][CHESS_SIZE_H_ANGLE];

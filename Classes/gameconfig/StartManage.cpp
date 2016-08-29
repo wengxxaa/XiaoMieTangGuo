@@ -1547,14 +1547,14 @@ void StartManage::faildJudge()
 		people->getAnimation()->play("win");
 		people->getAnimation()->setMovementEventCallFunc(armatureFun);
 
-		if(GameData::getSaveData()->_gg_guanshu<=5)
+//		if(GameData::getSaveData()->_gg_guanshu<=5)
 			GameData::getSaveData()->_gg_guanshu++;
 
 		if(getmLevel()==4)
 			vigame::ad::ADManager::openAd("level_win");
 
 		int temp=false;
-		if(GameData::getSaveData()->_gg_guanshu>5&&GameData::getSaveData()->_levelreward_num<LEVELREWARD)
+		if(GameData::getSaveData()->_gg_guanshu>5 && ((GameData::getSaveData()->_gg_guanshu - 5) % 2 == 0) &&GameData::getSaveData()->_levelreward_num<LEVELREWARD)
 		{
 			temp=true;
 			setGameState(STATE_STOP);
@@ -2766,10 +2766,17 @@ void StartManage::hongbaoReward()
 
 	auto node=CSLoader::createNode("animation/reward.csb");
 	char name[30];
-	if(rewardid<30)
+	if (rewardid < 30)
+	{
 		sprintf(name,"dimond-%d",rewardid);
-	else 
+		PayScene::getInstance()->diamondRain(layer);
+	}
+	else
+	{
 		sprintf(name,"prop");
+		PayScene::getInstance()->yanhua(layer);
+	}
+
 	auto sp=node->getChildByName(name);
 	sp->retain();
 	sp->removeFromParent();
@@ -2793,10 +2800,10 @@ void StartManage::hongbaoReward()
 	}
 	else
 	{
-		auto diamonds=CCParticleSystemQuad::create("lizi/diamonds.plist");
-		layer->addChild(diamonds,2);
-		diamonds->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*DIAMOND_HIGH));
-		diamonds->setAutoRemoveOnFinish(true);
+		//auto diamonds=CCParticleSystemQuad::create("lizi/diamonds.plist");
+		//layer->addChild(diamonds,2);
+		//diamonds->setPosition(Vec2(WINSIZE.width/2.0f,WINSIZE.height*DIAMOND_HIGH));
+		//diamonds->setAutoRemoveOnFinish(true);
 	}
 
 	sp->setScaleX(0.0f);

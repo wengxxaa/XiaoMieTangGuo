@@ -64,20 +64,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //	LOGGAME("begin");
 
 	//
-//#if (CC_TARGET_PLATFORM!=CC_PLATFORM_WIN32)
-//
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//    auto data=FileUtils::getInstance()->getValueMapFromFile("umeng_ios.plist");
-//#else
-//    auto data=FileUtils::getInstance()->getValueMapFromFile("umeng.plist");
-//#endif
-//
-//	auto umengdata=data.at("umengNumber").asString();
-//
-//	LOGGAME(umengdata.c_str());
-//
-//	MOBCLICKCPP_START_WITH_APPKEY(umengdata.c_str());
-//#endif
+#if (CC_TARGET_PLATFORM!=CC_PLATFORM_WIN32)
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    auto data=FileUtils::getInstance()->getValueMapFromFile("umeng_ios.plist");
+#else
+    auto data=FileUtils::getInstance()->getValueMapFromFile("umeng.plist");
+#endif
+
+	auto umengdata=data.at("umengNumber").asString();
+
+	LOGGAME(umengdata.c_str());
+
+	MOBCLICKCPP_START_WITH_APPKEY(umengdata.c_str());
+#endif
 	//
 #if(CC_TARGET_PLATFORM==CC_PLATFORM_WIN32)
 	GameDataInstance()->BANER_HEIGHT=68;

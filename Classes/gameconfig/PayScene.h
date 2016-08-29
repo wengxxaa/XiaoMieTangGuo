@@ -73,6 +73,9 @@ public:
 	//钻石雨
 	void diamondRain(Layer *lay);
 
+	//烟花
+	void yanhua(Layer *lay);
+
 	//得到物品的效果
 	void parShow(Layer *lay, int level, Vec2 pos);
     
