@@ -7,6 +7,7 @@ USING_NS_CC;
 USING_NS_CC_EXT;
 
 #include "vigame_ad.h"
+#include "ui/UITextBMFont.h"
 
 class PayScene
 {
@@ -62,7 +63,9 @@ public:
 
 	void turnTip();
     
-    void turnAddDiamond(int num);
+	//钻石向上飞
+	void turnAddDiamond(Layer *colorlay, int num, ui::TextBMFont *diamondnum, Vec2 position);
+	void turnAddDiamond(Layer *colorlay, int num,Vec2 position);
 
 	//免费支付
 	void paysuccess(int key);

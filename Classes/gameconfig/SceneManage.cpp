@@ -144,7 +144,7 @@ bool SceneManage::init()
 				{
 					char name[30];
 					int k=rand()%10+1;
-					sprintf(name,"fangkuai_%d.png",rand()%10+1);
+					sprintf(name,"fangkuai_%d.png",k);
 					auto boxnode=cjSprite::createWithImage(name);
 					_clip->addChild(boxnode,CHESSMAN_LEVEL,i*CHESS_SIZE_H);
 					boxnode->setPosition(chessPos(i,0));
@@ -161,13 +161,14 @@ bool SceneManage::init()
 				if(i<2||i>4)
 				{
 					char name[30];
-					sprintf(name,"fangkuai_%d.png",rand()%10+1);
+					int k = rand() % 10 + 1;
+					sprintf(name,"fangkuai_%d.png",k);
 					auto boxnode=cjSprite::createWithImage(name);
 					_clip->addChild(boxnode,CHESSMAN_LEVEL,i*CHESS_SIZE_H);
 					boxnode->setPosition(chessPos(i,0));
 					boxnode->setScale(CHESSMAN_SCALE);
 					_chessFilInfo[i][0]=1;
-					_chessSaveInfo[i][0]=int(_recentBox)%10+1;
+					_chessSaveInfo[i][0]=k;
 				}
 			}
 		}

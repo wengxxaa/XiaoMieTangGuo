@@ -2822,39 +2822,7 @@ void StartManage::hongbaoReward()
 	}),DelayTime::create(2.0f),CallFunc::create([=](){
 		if(rewardid<30)
 		{
-			int round = rewardid;
-			if (rewardid > 5)
-				round = 5;
-			for (int i = 0; i < round; i++)
-			{
-				Vector<FiniteTimeAction*> action;
-				auto diamond = cjSprite::createWithImage("zs.png");
-				this->addChild(diamond, 10);
-				diamond->setRotation(28);
-				diamond->setPosition(Vec2(240, 400));
-				diamond->setScale(1.2f);
-				//diamond->runAction(ScaleTo::create(0.7f, 1.2f));
-				action.pushBack(DelayTime::create(i*0.2f));
-				action.pushBack(CallFunc::create([=]() {
-					diamond->runAction(Sequence::create(MoveTo::create(0.7f, diamondpos), ScaleTo::create(0.3f, 1.0f), CallFunc::create([=]() {
-						int knum = MAX(1,rewardid/5);
-						if (i == 4)
-							knum = rewardid - 4*knum;
-						GameData::getSaveData()->_diamondNumber += knum;
-						diamond->removeFromParent();
-
-						PayScene::getInstance()->parShow(this, 10, diamondpos);
-
-						cjMusic::playEffect("video/coinsin.mp3");
-						GameData::getInstance()->dataSave();
-					}), nullptr));
-					diamond->setScale(2.0f);
-					diamond->runAction(ScaleTo::create(0.5f, 1.0f));
-				}));
-				diamond->runAction(Sequence::create(action));
-			}
-
-
+			PayScene::getInstance()->turnAddDiamond(this, rewardid, diamondpos);
 		}
 		else if(rewardid==50)
 		{

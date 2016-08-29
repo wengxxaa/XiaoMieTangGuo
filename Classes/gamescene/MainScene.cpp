@@ -134,17 +134,7 @@ bool MainScene::init()
 		if (type == ui::Widget::TouchEventType::BEGAN)
 		{
 			cjMusic::playEffect("video/tap.mp3");
-			vigame::ad::ADManager::openAd("home_mfzs", [=](vigame::ad::ADSourceItem* pADItem, int result) {
-				if (result == vigame::ad::ADSourceItem::open_result::OpenSuccess)
-				{
-					GameData::getSaveData()->_diamondNumber += 10;
-					GameData::getSaveData()->_freediamondnum++;
-					GameData::getInstance()->dataSave();
-                    
-                    PayScene::getInstance()->dailyClickTip(10,2);
-                    PayScene::getInstance()->addDiamondPlist(this, 10);
-				}
-			});
+			PayScene::getInstance()->turnTip();
 		}
 	});
 
@@ -340,7 +330,7 @@ bool MainScene::init()
 		}
 	});
 
-	if(vigame::MMChnlManager::getInstance()->getMMChnl()->lottery<=0||(GameData::getSaveData()->_freeroundnum>=20))
+	if(vigame::MMChnlManager::getInstance()->getMMChnl()->lottery<=0)
 		turn->setVisible(false);
 	//
 

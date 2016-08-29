@@ -88,6 +88,10 @@ void GameData::dataReset()
 
 	d_saveData._freeroundday=0;
 
+	d_saveData._freeroundnum=0;	
+
+	d_saveData._freediamondnum=0;
+
 	d_saveData._huhightnum=50;
 
 	d_saveData._hunum=0;
@@ -156,6 +160,10 @@ void GameData::dataRead()
 			d_saveData._freeround=gamedata->_freeround;
 
 			d_saveData._freeroundday=gamedata->_freeroundday;
+
+			d_saveData._freeroundnum =gamedata->_freeroundday;
+
+			d_saveData._freediamondnum = gamedata->_freeroundday;
 
 			d_saveData._huhightnum=gamedata->_huhightnum;
 

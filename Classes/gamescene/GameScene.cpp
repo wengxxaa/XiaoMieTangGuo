@@ -435,6 +435,8 @@ void GameScene::faildPage()
 		}
 	});
 
+	auto tip2 = bg->getChildByName("tips2");
+
 	auto mffh = dynamic_cast<ui::Button*>(bg->getChildByName("Button_mffh"));
 	mffh->addTouchEventListener([this](Ref*, ui::Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
@@ -453,9 +455,20 @@ void GameScene::faildPage()
 
 	mffh->runAction(CCRepeatForever::create((CCActionInterval*)Sequence::createWithTwoActions(ScaleTo::create(0.5f, 0.83f), ScaleTo::create(0.5f, 0.77f))));
 
-	auto hand = handNode::createHand(0.4f);
-	layer->addChild(hand, 2);
-	hand->setPosition(mffh->getPosition() + Vec2(50, -20));
+	auto pADItem = vigame::ad::ADManager::isAdReady("level_fail_mfzs", "video");
+	if (!pADItem)
+	{
+		mffh->setVisible(false);
+
+		jxtg2->setPositionX(240);
+		tip2->setPositionX(240);
+	}
+	else
+	{
+		auto hand = handNode::createHand(0.4f);
+		layer->addChild(hand, 2);
+		hand->setPosition(mffh->getPosition() + Vec2(50, -20));
+	}
 	
 #else
 	auto mffh = bg->getChildByName("Button_mffh");

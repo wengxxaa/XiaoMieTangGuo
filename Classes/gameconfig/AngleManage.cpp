@@ -1952,21 +1952,7 @@ void AngleManage::hongbaoReward()
 	}),DelayTime::create(2.0f),CallFunc::create([=](){
 		if(rewardid<30)
 		{
-			auto diamond=cjSprite::createWithImage("zs.png");
-			this->addChild(diamond,10);
-			diamond->setRotation(30);
-			diamond->setPosition(Vec2(240,420));
-			diamond->runAction(ScaleTo::create(0.7f, 1.2f));
-			diamond->runAction(Sequence::create(MoveTo::create(0.7f,diamondpos), ScaleTo::create(0.3f, 1.0f), CallFunc::create([=](){
-				GameData::getSaveData()->_diamondNumber+=rewardid;
-				diamond->removeFromParent();
-				cjMusic::playEffect("video/coinsin.mp3");
-				GameData::getInstance()->dataSave();
-
-				PayScene::getInstance()->parShow(this,10,diamondpos);
-			}),nullptr));
-			diamond->setScale(2.0f);
-			diamond->runAction(ScaleTo::create(0.5f,1.0f));
+			PayScene::getInstance()->turnAddDiamond(this, rewardid, diamondpos);
 		}
 		else if(rewardid>50)
 		{
