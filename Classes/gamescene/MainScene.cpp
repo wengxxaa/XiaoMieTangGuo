@@ -19,16 +19,13 @@ using namespace cocostudio;
 void MainScene::checkVideoState(float dt) {
 	auto pADItem = vigame::ad::ADManager::isAdReady("home_mfzs","video");
 	auto zuanshi=this->getChildByName("csb")->getChildByName("Button_mfzs");
-	auto hand = this->getChildByName("mfzshand");
 	if (pADItem&&GameData::getSaveData()->_freediamondnum<10) {
 		if (zuanshi->isVisible() == false) {
 			zuanshi->setVisible(true);
-			hand->setVisible(true);
 		}
 	}
 	else {
 		zuanshi->setVisible(false);
-		hand->setVisible(false);
 	}
 }
 #endif
@@ -42,6 +39,7 @@ bool MainScene::init()
 
 	cjMusic::playBackgroundMusic("video/music.mp3", true);
 
+	GameDataInstance()->main_num++;
 	_xieyi=true;
 	GameDataInstance()->d_PayType=0;
 	GameDataInstance()->d_PayType= vigame::pay::PayManager::getDefaultPayType();
@@ -54,24 +52,24 @@ bool MainScene::init()
 	csbname = "animation/mainpage.csb";
 #endif
 
-	auto bbbsp = Sprite::create("animation/Mainpage/background_01.png");
-	this->addChild(bbbsp);
-	bbbsp->setAnchorPoint(Vec2(0.5f, 0.5f));
-	bbbsp->setPosition(WINSIZE / 2.0f);
+	//auto bbbsp = Sprite::create("animation/Mainpage/background_01.png");
+	//this->addChild(bbbsp);
+	//bbbsp->setAnchorPoint(Vec2(0.5f, 0.5f));
+	//bbbsp->setPosition(WINSIZE / 2.0f);
 
 	auto backcsb=CSLoader::createNode(csbname);
 	this->addChild(backcsb,1,"csb");
 	backcsb->setAnchorPoint(Vec2(0.5f,0.5f));
 	backcsb->setPosition(WINSIZE/2.0f);
 
-	auto backsp = backcsb->getChildByName("background");
-	backsp->retain();
-	backsp->removeFromParent();
+	//auto backsp = backcsb->getChildByName("background");
+	//backsp->retain();
+	//backsp->removeFromParent();
 
-	_gridnode = NodeGrid::create();
-	this->addChild(_gridnode);
-	_gridnode->setPosition(WINORIGIN);
-	_gridnode->addChild(backsp);
+	//_gridnode = NodeGrid::create();
+	//this->addChild(_gridnode);
+	//_gridnode->setPosition(WINORIGIN);
+	//_gridnode->addChild(backsp);
 
 	string namestr[4]={
 		"Button_dj",
@@ -140,11 +138,6 @@ bool MainScene::init()
 
 	Button_mfzs->runAction(RepeatForever::create((ActionInterval*)Sequence::createWithTwoActions(RotateTo::create(0.2f,5.0f),RotateTo::create(0.2f,-5.0f))));
 	Button_mfzs->setVisible(false);
-
-	auto hand = handNode::createHand(0.4f);
-	this->addChild(hand, 2,"mfzshand");
-	hand->setPosition(Button_mfzs->getPosition()+Vec2(30,-10));
-	hand->setVisible(false);
 
 #else
 	auto shop=dynamic_cast<ui::Button*>(backcsb->getChildByName("Button_shop"));
@@ -302,18 +295,32 @@ bool MainScene::init()
 	//签到
 	auto qd = dynamic_cast<ui::Button*>(backcsb->getChildByName("Button_qd"));
 	qd->addTouchEventListener([=](Ref *, ui::Widget::TouchEventType type) {
-		if (type == ui::Widget::TouchEventType::BEGAN)
+		auto lay = Director::getInstance()->getRunningScene()->getChildByTag(100);
+		if (!lay)
 		{
-			cjMusic::playEffect("video/tap.mp3");
-			qd->setScale(MENU_SCALE);
-		}
-		else if (type == ui::Widget::TouchEventType::ENDED)
-		{
-			qd->setScale(1.0f);
-			PayScene::getInstance()->dailyClick();
+			if (type == ui::Widget::TouchEventType::BEGAN)
+			{
+				cjMusic::playEffect("video/tap.mp3");
+				qd->setScale(MENU_SCALE);
+			}
+			else if (type == ui::Widget::TouchEventType::ENDED)
+			{
+				qd->setScale(1.0f);
+				PayScene::getInstance()->dailyClick();
+			}
 		}
 	});
 	//
+
+	//自动弹出每日奖励
+	int k1 = GameData::getSaveData()->_qd_day;
+	int k2 = GameDataInstance()->d_daytime;
+	if (GameData::getSaveData()->_qd_day != GameDataInstance()->d_daytime&&(GameDataInstance()->main_num==1))
+	{
+		this->runAction(Sequence::create(DelayTime::create(1.0f), CallFunc::create([]() {
+			PayScene::getInstance()->dailyClick();
+		}), nullptr));
+	}
 
 	//大转盘
 	auto turn=dynamic_cast<ui::Button*>(backcsb->getChildByName("Button_turn"));
@@ -326,6 +333,7 @@ bool MainScene::init()
 		else if(type==ui::Widget::TouchEventType::ENDED)
 		{
 			turn->setScale(1.0f);
+			GameDataInstance()->d_jointurn = false;
 			PayScene::getInstance()->turnTable();
 		}
 	});
@@ -345,11 +353,11 @@ bool MainScene::init()
 	Director::getInstance()->setDepthTest(false);
 	_wavenum = 0;
 
-	auto listener2 = EventListenerTouchOneByOne::create();
-	listener2->onTouchBegan = CC_CALLBACK_2(MainScene::onTouchBegan, this);
-	listener2->onTouchMoved = CC_CALLBACK_2(MainScene::onTouchMoved, this);
-	listener2->onTouchEnded = CC_CALLBACK_2(MainScene::onTouchEnded, this);
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener2, this);
+	//auto listener2 = EventListenerTouchOneByOne::create();
+	//listener2->onTouchBegan = CC_CALLBACK_2(MainScene::onTouchBegan, this);
+	//listener2->onTouchMoved = CC_CALLBACK_2(MainScene::onTouchMoved, this);
+	//listener2->onTouchEnded = CC_CALLBACK_2(MainScene::onTouchEnded, this);
+	//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener2, this);
 
 	return true;
 }
@@ -357,7 +365,6 @@ bool MainScene::init()
 
 void MainScene::text(int k)
 {
-
 }
 
 void exitGame()
@@ -522,13 +529,13 @@ void MainScene::xinshouUpdate(float ft)
 
 bool MainScene::onTouchBegan(Touch *touch, Event *unused_event)
 {
-	_wavenum++;
-	_gridnode->runAction(Sequence::create(Ripple3D::create(1.5f, CCSizeMake(32, 24), touch->getLocation(), 300, 4, 30),
-		CallFunc::create([this]() {
-		_wavenum--;
-		if (_wavenum == 0)
-			_gridnode->runAction(Ripple3D::create(0.1f, CCSizeMake(32, 24), Vec2(0,0), 10, 1, 0));
-	}), nullptr));
+	//_wavenum++;
+	//_gridnode->runAction(Sequence::create(Ripple3D::create(1.5f, CCSizeMake(32, 24), touch->getLocation(), 300, 4, 30),
+	//	CallFunc::create([this]() {
+	//	_wavenum--;
+	//	if (_wavenum == 0)
+	//		_gridnode->runAction(Ripple3D::create(0.1f, CCSizeMake(32, 24), Vec2(0,0), 10, 1, 0));
+	//}), nullptr));
 	return false;
 }
 

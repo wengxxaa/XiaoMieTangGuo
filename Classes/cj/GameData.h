@@ -214,6 +214,13 @@ public:
 	bool d_levelReward;
 
 	int d_PayType;
+
+	//进入main的次数
+	int main_num;
+
+	//是否由过关奖励进入转盘
+	bool d_jointurn;
+
 private:
 	_data d_saveData;
 

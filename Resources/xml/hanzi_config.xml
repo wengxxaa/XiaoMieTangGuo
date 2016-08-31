@@ -142,5 +142,7 @@
   <string>活动已经开始了，赶紧看看排行榜吧，不服来战！</string>
   <key>string_notice_text_2</key>
   <string>游戏需要联网状态才能记录比赛结果哦。</string>
+  <key>shipingload</key>
+  <string>钻石视频正在加载中......</string>
 </dict>
 </plist>

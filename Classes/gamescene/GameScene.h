@@ -84,6 +84,9 @@ public:
 
 	//钻石变化
 	void diamondChange(int frontsc, int endsc);
+
+	//钻石刷新
+	void diamondUpdate(float ft);
     
     Layer* faildlayer;
 

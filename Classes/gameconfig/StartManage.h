@@ -172,6 +172,9 @@ private:
 	void setPostShow(bool key);
 	void postEvent();
 
+	//跳过指引
+	void ignoreGuide();
+
 public:
 	CC_SYNTHESIZE(int,_diamondnumber,Diamond);	//钻石数
 

@@ -57,19 +57,19 @@ bool GameScene::init()
 	//≤®Œ∆
 	if (GameDataInstance()->d_Project == GAME_START)
 	{
-		auto bbbsp = Sprite::create("animation/Mainpage/background.png");
-		this->addChild(bbbsp);
-		bbbsp->setAnchorPoint(Vec2(0.5f, 0.5f));
-		bbbsp->setPosition(WINSIZE / 2.0f);
+		//auto bbbsp = Sprite::create("animation/Mainpage/background.png");
+		//this->addChild(bbbsp);
+		//bbbsp->setAnchorPoint(Vec2(0.5f, 0.5f));
+		//bbbsp->setPosition(WINSIZE / 2.0f);
 
-		auto backsp = _backnode->getChildByName("background_4");
-		backsp->retain();
-		backsp->removeFromParent();
+		//auto backsp = _backnode->getChildByName("background_4");
+		//backsp->retain();
+		//backsp->removeFromParent();
 
-		_gridnode = NodeGrid::create();
-		this->addChild(_gridnode);
-		_gridnode->setPosition(WINORIGIN);
-		_gridnode->addChild(backsp);
+		//_gridnode = NodeGrid::create();
+		//this->addChild(_gridnode);
+		//_gridnode->setPosition(WINORIGIN);
+		//_gridnode->addChild(backsp);
 	}
 	//
 
@@ -179,6 +179,7 @@ bool GameScene::init()
 	startGame();
 
 	schedule(schedule_selector(GameScene::dateUpdate),0.1f);
+	schedule(schedule_selector(GameScene::diamondUpdate));
 	
 	auto listener=EventListenerKeyboard::create();
 	listener->onKeyReleased=CC_CALLBACK_2(GameScene::onKeyReleased,this);
@@ -186,14 +187,14 @@ bool GameScene::init()
 
 	if (GameDataInstance()->d_Project == GAME_START)
 	{
-		Director::getInstance()->setDepthTest(false);
-		_wavenum = 0;
+		//Director::getInstance()->setDepthTest(false);
+		//_wavenum = 0;
 
-		auto listener2 = EventListenerTouchOneByOne::create();
-		listener2->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchBegan, this);
-		listener2->onTouchMoved = CC_CALLBACK_2(GameScene::onTouchMoved, this);
-		listener2->onTouchEnded = CC_CALLBACK_2(GameScene::onTouchEnded, this);
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener2, this);
+		//auto listener2 = EventListenerTouchOneByOne::create();
+		//listener2->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchBegan, this);
+		//listener2->onTouchMoved = CC_CALLBACK_2(GameScene::onTouchMoved, this);
+		//listener2->onTouchEnded = CC_CALLBACK_2(GameScene::onTouchEnded, this);
+		//this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener2, this);
 	}
 	return true;
 }
@@ -207,12 +208,6 @@ void GameScene::dateUpdate(float ft)
 	int stepnumber=0;
 	ShapeIndex nbox[3];
 	GameState gstate;
-
-	if(_backnode->getChildByName("zuanshi")&&GameData::getSaveData()->_diamondNumber!=getgDiamond())
-	{
-		_diamondfont->setString(cjTTFLabel::getNameByInt("%d", GameData::getSaveData()->_diamondNumber));
-		setgDiamond(GameData::getSaveData()->_diamondNumber);
-	}
 
 	BaseManage *manage =dynamic_cast<BaseManage*>(getChildByName("manage"));
 	if (manage)
@@ -400,7 +395,7 @@ void GameScene::faildPage()
 	layer->setAnchorPoint(Vec2(0.5f,0.5f));
 	layer->setPosition(WINORIGIN+WINSIZE/2.0f);
 
-	auto backcsb=CSLoader::createNode("animation/faildpage.csb");
+	auto backcsb=CSLoader::createNode("animation/faildpage_ios.csb");
 	layer->addChild(backcsb);
 	backcsb->setAnchorPoint(Vec2(0.5f,0.5f));
 	backcsb->setPosition(WINSIZE/2.0f);
@@ -438,14 +433,25 @@ void GameScene::faildPage()
 	auto tip2 = bg->getChildByName("tips2");
 
 	auto mffh = dynamic_cast<ui::Button*>(bg->getChildByName("Button_mffh"));
-	mffh->addTouchEventListener([this](Ref*, ui::Widget::TouchEventType type) {
+	mffh->addTouchEventListener([=](Ref*, ui::Widget::TouchEventType type) {
 		if (type == ui::Widget::TouchEventType::ENDED)
 		{
+			auto mffh = dynamic_cast<ui::Button*>(bg->getChildByName("Button_mffh"));
+			mffh->setEnabled(false);
+			auto cha = dynamic_cast<ui::Button*>(bg->getChildByName("cha"));
+			cha->setEnabled(false);
+			auto zsfh = dynamic_cast<ui::Button*>(bg->getChildByName("Button_jxtg2"));
+			zsfh->setEnabled(false);
+
+            PayScene::getInstance()->openTip();
+            
 			cjMusic::stopAllEffect();
 			cjMusic::playEffect("video/tap.mp3");
 			vigame::ad::ADManager::openAd("level_fail_mfzs", [=](vigame::ad::ADSourceItem* pADItem,int result) {
 				if (result == vigame::ad::ADSourceItem::open_result::OpenSuccess)
 				{
+                    PayScene::getInstance()->closeTip();
+                    
 					faildlayer->removeFromParent();
 					resurrection();
 				}
@@ -453,7 +459,7 @@ void GameScene::faildPage()
 		}
 	});
 
-	mffh->runAction(CCRepeatForever::create((CCActionInterval*)Sequence::createWithTwoActions(ScaleTo::create(0.5f, 0.83f), ScaleTo::create(0.5f, 0.77f))));
+	mffh->runAction(CCRepeatForever::create((CCActionInterval*)Sequence::createWithTwoActions(ScaleTo::create(0.5f, 0.95f), ScaleTo::create(0.5f, 1.0f))));
 
 	auto pADItem = vigame::ad::ADManager::isAdReady("level_fail_mfzs", "video");
 	if (!pADItem)
@@ -533,7 +539,6 @@ void GameScene::faildPage()
 	};
 	layer->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, layer);
 }
-
 
 void GameScene::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
@@ -755,7 +760,8 @@ void GameScene::scoreChange(int frontsc, int endsc)
 		}));
 		action.pushBack(DelayTime::create(1 / 60.0f));
 	}
-	_scorefont->runAction(Sequence::create(action));
+	if(action.size()>0)
+		_scorefont->runAction(Sequence::create(action));
 
 	float ff;
 	if (GameDataInstance()->d_Project == GAME_ANGLE || GameDataInstance()->d_Project == GAME_START)
@@ -790,19 +796,19 @@ void GameScene::diamondChange(int frontsc, int endsc)
 		}));
 		action.pushBack(DelayTime::create(1 / 60.0f));
 	}
-	_scorefont->runAction(Sequence::create(action));
+	if(action.size()>0)
+		_scorefont->runAction(Sequence::create(action));
 }
 
 bool GameScene::onTouchBegan(Touch *touch, Event *unused_event)
 {
-	//	_gridnode->runAction(Ripple3D::create(1.5f, CCSizeMake(30, 30), touch->getLocation(), 300, 4, 60));
-	_wavenum++;
-	_gridnode->runAction(Sequence::create(Ripple3D::create(1.5f, CCSizeMake(32, 24), touch->getLocation(), 300, 4, 30),
-		CallFunc::create([this]() {
-		_wavenum--;
-		if (_wavenum == 0)
-			_gridnode->runAction(Ripple3D::create(0.1f, CCSizeMake(32, 24), Vec2(0, 0), 10, 1, 0));
-	}), nullptr));
+	//_wavenum++;
+	//_gridnode->runAction(Sequence::create(Ripple3D::create(1.5f, CCSizeMake(32, 24), touch->getLocation(), 300, 4, 30),
+	//	CallFunc::create([this]() {
+	//	_wavenum--;
+	//	if (_wavenum == 0)
+	//		_gridnode->runAction(Ripple3D::create(0.1f, CCSizeMake(32, 24), Vec2(0, 0), 10, 1, 0));
+	//}), nullptr));
 	return false;
 }
 
@@ -811,3 +817,14 @@ void GameScene::onTouchesMoved(Touch *touch, Event *unused_event)
 
 void GameScene::onTouchEnded(Touch *touch, Event *unused_event)
 {}
+
+//钻石刷新
+void GameScene::diamondUpdate(float ft)
+{
+	if (_backnode->getChildByName("zuanshi") && GameData::getSaveData()->_diamondNumber != getgDiamond())
+	{
+		_diamondfont->setString(cjTTFLabel::getNameByInt("%d", GameData::getSaveData()->_diamondNumber));
+		setgDiamond(GameData::getSaveData()->_diamondNumber);
+        GameData::getInstance()->dataSave();
+	}
+}

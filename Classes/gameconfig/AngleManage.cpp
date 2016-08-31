@@ -1913,7 +1913,6 @@ void AngleManage::hongbaoReward()
 	else
 	{
 		sprintf(name,"prop");
-		PayScene::getInstance()->yanhua(layer);
 	}
 
 	auto sp=node->getChildByName(name);
@@ -1964,6 +1963,9 @@ void AngleManage::hongbaoReward()
 		layer->runAction(Sequence::create(DelayTime::create(2.0f),CallFunc::create([guangnode](){
 			guangnode->removeFromParent();
 		}),nullptr));
+
+		if(rewardid>30)
+			PayScene::getInstance()->yanhua(layer);
 
 	}),DelayTime::create(2.0f),CallFunc::create([=](){
 		if(rewardid<30)

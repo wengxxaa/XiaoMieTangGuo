@@ -1,6 +1,7 @@
 #ifndef PayScene_H_
 #define PayScene_H_
 
+#include"stdio.h"
 #include"cocos2d.h"
 USING_NS_CC;
 #include"cocos-ext.h"
@@ -57,6 +58,7 @@ public:
 
 	void tableReward(int key);
 
+
 	void menuchange();
 
 	void turnMotion(float ft);
@@ -80,8 +82,11 @@ public:
 	void parShow(Layer *lay, int level, Vec2 pos);
     
     void addDiamondPlist(Layer *lay,int level);
-
-
+    
+    void openTip();
+    
+    void closeTip();
+    
 private:
     
     Menu* zuanshi;

@@ -25,6 +25,8 @@ const float cleardelaytime=0.1f;	//«Â≥˝Õ£∂Ÿ ±º‰
 const float tipdelaytime=0.6f;	//Ã· æµ»¥˝ ±º‰
 const Vec2 diamondpos=Vec2(370,712);
 const float propscale = 0.9f;	//µ¿æﬂÀı∑≈
+const Vec2 ignoreps = Vec2(180,200);
+const string ignorestr = "animation/Mainpage/ignore.png";
 
 const int diamondnum[4]={10,10,10,50};
 
@@ -616,6 +618,8 @@ bool StartManage::propProcess(int id,pair<int,int> pos)
 			{
 				if(getGameState()==STATE_STOP)
 					setGameState(STATE_RUN);
+
+				beganTip();
 			}
 			else
 			{
@@ -833,6 +837,8 @@ void StartManage::propMotion(int k)
 	if(k==3)
 	{
 		propProcess(2);
+		if (!_guide)
+			endTip();
 	}
 	else
 	{
@@ -1838,8 +1844,6 @@ bool StartManage::singelCanEliminate(pair<int,int> pos)
 //–¬ ÷÷∏“˝
 void StartManage::startGuide()
 {
-	setPostShow(false);
-
 	auto colorlay=LayerColor::create(Color4B(0,0,0,255*OPA_BEIJING*0),WINSIZE.width,WINSIZE.height);
 	Director::getInstance()->getRunningScene()->addChild(colorlay,100,100);
 	colorlay->setPosition(WINORIGIN);
@@ -1882,6 +1886,14 @@ void StartManage::startGuide()
 	auto handnode=handNode::createHand(0.4f);
 	colorlay->addChild(handnode,4,"hand");
 	handnode->setPosition(posToposition(make_pair(3,9)));
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlay->removeFromParent();
+		ignoreGuide();
+	});
+	colorlay->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 void StartManage::setGuide2()
@@ -1912,6 +1924,14 @@ void StartManage::setGuide2()
 
 	auto handnode = colorlayer->getChildByName("hand");
 	handnode->setPosition(Vec2(50,665));
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlayer->removeFromParent();
+		ignoreGuide();
+	});
+	colorlayer->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 void StartManage::setGuide1()
@@ -1934,6 +1954,14 @@ void StartManage::setGuide1()
 
 	auto handnode=colorlayer->getChildByName("hand");
 	handnode->setPosition(posToposition(make_pair(6,9)));
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlayer->removeFromParent();
+		ignoreGuide();
+	});
+	colorlayer->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 void StartManage::setGuide3()
@@ -1962,6 +1990,14 @@ void StartManage::setGuide3()
 	this->addChild(hand,102,"hand");
 	hand->setRotation(-20.0f);
 	hand->setPosition(hb->getPosition());
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlay->removeFromParent();
+		ignoreGuide();
+	});
+	colorlay->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 void StartManage::setGuide4()
@@ -1989,6 +2025,14 @@ void StartManage::setGuide4()
 		return true;
 	};
 	colorlay->getEventDispatcher()->addEventListenerWithSceneGraphPriority(touchListener, colorlay);
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlay->removeFromParent();
+		ignoreGuide();
+	});
+	colorlay->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 void StartManage::setGuideProp(int id)
@@ -2024,6 +2068,14 @@ void StartManage::setGuideProp(int id)
 	auto font = csb->getChildByName("zi")->getChildByName(cjTTFLabel::getNameByInt("zi_%d", kkk));
 	font->setVisible(true);
 	font->runAction(RepeatForever::create((ActionInterval*)Sequence::createWithTwoActions(ScaleTo::create(0.6f, 1.02f), ScaleTo::create(0.6f, 0.98f))));
+
+	//跳过指引
+	auto ignore = cjMenu::createWithImage2(ignorestr, [=](Ref *mu) {
+		colorlay->removeFromParent();
+		ignoreGuide();
+	});
+	colorlay->addChild(ignore);
+	ignore->setPosition(ignoreps);
 }
 
 //µ⁄4∏ˆµ¿æﬂ–ßπ˚
@@ -2774,7 +2826,6 @@ void StartManage::hongbaoReward()
 	else
 	{
 		sprintf(name,"prop");
-		PayScene::getInstance()->yanhua(layer);
 	}
 
 	auto sp=node->getChildByName(name);
@@ -2825,6 +2876,9 @@ void StartManage::hongbaoReward()
 		layer->runAction(Sequence::create(DelayTime::create(2.0f),CallFunc::create([guangnode](){
 			guangnode->removeFromParent();
 		}),nullptr));
+
+		if(rewardid>30)
+			PayScene::getInstance()->yanhua(layer);
 
 	}),DelayTime::create(2.0f),CallFunc::create([=](){
 		if(rewardid<30)
@@ -3152,7 +3206,8 @@ float StartManage::smallPeopleCollect(vector<pair<int, int>> vec)
 		action.pushBack(DelayTime::create(boxremovesingletime));
 		tt += boxremovesingletime;
 	}
-	runAction(Sequence::create(action));
+	if(action.size()>0)
+		runAction(Sequence::create(action));
 
 	return tt;
 }
@@ -3249,4 +3304,17 @@ void StartManage::huptUpdate(float ft)
 		auto par = this->getChildByName("par");
 		par->setRotation(45.0f - (_hutempnum*1.0f / GameData::getSaveData()->_huhightnum)*200.0f);
 	}
+}
+
+//跳过指引
+void StartManage::ignoreGuide()
+{
+//	this->removeFromParent();
+	_guide = false;
+	_guidenumber = 0;
+	GameDataInstance()->_guide = false;
+	GameData::getSaveData()->_start._guider = true;
+	GameData::getInstance()->dataSave();
+	auto manage = static_cast<GameScene*>(Director::getInstance()->getRunningScene()->getChildByTag(99));
+	manage->restart();
 }

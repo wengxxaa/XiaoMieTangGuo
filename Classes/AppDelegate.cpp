@@ -131,8 +131,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 //	LOGGAME("beginRun");
 	// run
-    preLoad();
-	director->runWithScene(MainScene::createScene());
+
+	GameDataInstance()->main_num = 0;
 
 	GameDataInstance()->d_daytime=(time(NULL)/(24*3600));
 
@@ -245,6 +245,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	vigame::ad::ADManager::openAd("splash");
 	
 	Device::setKeepScreenOn(true);
+
+	preLoad();
+	director->runWithScene(MainScene::createScene());
 
     return true;
 }
